@@ -1,6 +1,9 @@
 var request = require('request'),
 	cheerio = require('cheerio'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	charset = require('charset'),
+	jchardet = require('jschardet'),
+	iconv = require('iconv-lite');
 
 module.exports = function(options, callback){
 	exports.getInfo(options, function(err,results){
@@ -116,6 +119,7 @@ exports.getInfo = function(options, callback){
 		if(inputUrlFlag && inputUrlFlag == true && inputTimeoutFlag && inputTimeoutFlag == true){
 			options.url = inputUrl;
 			options.timeout = inputTimeout;
+			options.encoding = options.encoding || 'binary';
 			that.getOG(options, function(err, results) {
 				if(results && results.success){
 					returnResule = {
@@ -217,6 +221,13 @@ exports.getOG = function(options, callback) {
 		if(err){
 			callback(err, null);
 		} else {
+			var enc = charset(response.headers, body);
+			if (!enc) {
+				var detected = jchardet.detect(body);
+				enc = detected.encoding ? detected.encoding.toLowerCase() : 'utf8';
+			}
+			body = iconv.decode(new Buffer(body, 'binary'), enc);
+
 			var $ = cheerio.load(body),
 				meta = $('meta'),
 				keys = Object.keys(meta),
