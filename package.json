@@ -10,9 +10,12 @@
 		"url" : "https://github.com/jshemas"
 	},
 	"dependencies": {
-		"request": "2.34.0",
+		"charset": "^1.0.0",
+		"cheerio": "0.15.0",
+		"iconv-lite": "^0.4.7",
+		"jschardet": "^1.1.1",
 		"lodash": "3.5.0",
-		"cheerio": "0.15.0"
+		"request": "2.34.0"
 	},
 	"devDependencies": {
 		"expect.js": "0.3.1",
